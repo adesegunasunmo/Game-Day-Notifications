@@ -1,125 +1,152 @@
-# 30 Days DevOps Challenge - Weather Dashboard
+# **NBA Game Day Notifications** / **Sports Alerts System**
 
-## Day 1: Building a Weather Data Collection System with AWS S3 and OpenWeather API
+## **Project Overview**
+Stay on top of the game!This project is a **real time NBA Game Day Notifications System** that delivers live score updates straight to your inbox or phone via **SMS/Email**. Built using **AWS Services** and **NBA APIs**, it showcases how to design a secure, scalable, and automated cloud-based notification system. Perfect for sports enthusiasts and techies exploring AWS and Python-based solutions.
 
-## Project Overview
-This project is a Weather Data Collection System that demonstrates core DevOps principles by combining:
-- External API Integration (OpenWeather API)
-- Cloud Storage (AWS S3)
-- Infrastructure as Code
-- Version Control (Git)
-- Python Development
-- Error Handling
-- Environment Management
+---
 
-## Features
-- Fetches real-time weather data for multiple cities
-- Displays temperature (°F), humidity, and weather conditions
-- Automatically stores weather data in AWS S3
-- Supports multiple cities tracking
-- Timestamps all data for historical tracking
+## **Key Features**
+- **Live Score Updates**: Fetches live NBA scores from the **NBA Game API**.
+- **Real-Time Notifications**: Sends formatted updates via **Amazon SNS** (SMS/Email).
+- **Automated Scheduling**: Uses **Amazon EventBridge** for regular updates.
+- **Security-Focused Design**: Implements the **principle of least privilege** for AWS IAM roles.
 
-## Technical Architecture
-- **Language:** Python 3.x
-- **Cloud Provider:** AWS (S3)
-- **External API:** OpenWeather API
-- **Dependencies:** 
-  - boto3 (AWS SDK)
-  - python-dotenv
-  - requests
+---
 
-## Project Structure
+## **Tech Stack**
+- **Cloud Provider**: AWS
+- **Core Services**: Amazon SNS, AWS Lambda, EventBridge
+- **API**: NBA Game API from [SportsData.io](https://sportsdata.io/)
+- **Language**: Python 3.x
+- **Security**: Custom IAM policies for secure integration
 
-```markdown
-weather-dashboard/
-  src/
-    __init__.py
-    weather_dashboard.py
-  tests/
-  data/
-  .env
-  .gitignore
-  requirements.txt
+---
+
+## **Architecture Overview**
+![nba_API](https://github.com/user-attachments/assets/5e19635e-0685-4c07-9601-330f7d1231f9)
+
+- **Amazon EventBridge**: Automates scheduling of the Lambda function to fetch live game data.
+- **AWS Lambda**: Executes the notification logic in real time.
+- **Amazon SNS**: Sends game day updates to users via SMS and Email.
+
+---
+
+## **Project Structure**
+```bash
+game-day-notifications/
+├── src/
+│   ├── gd_notifications.py          # Main Lambda function code
+├── policies/
+│   ├── gd_sns_policy.json           # SNS publishing permissions
+│   ├── gd_eventbridge_policy.json   # EventBridge to Lambda permissions
+│   └── gd_lambda_policy.json        # Lambda execution role permissions
+├── .gitignore
+└── README.md                        # Project documentation
 ```
-## Prerequisites
-Ensure the following tools and credentials are set up on your local machine before proceeding:
+---
 
- - **VS Code Editor** you can see documentation [here](https://code.visualstudio.com/download)
+## **Getting Started**
 
-- **AWS CLI** you can see documentation [here](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
-
-- **AWS Account:** Access credentials with sufficient permissions to interact with S3.
-
-- **OpenWeather API Key:** Generate an API key by signing up at OpenWeather API.
-  
-## Setup Instructions
-
-1. Clone the repository:
-  ```
-  git clone https://github.com/ShaeInTheCloud/30days-weather-dashboard.git
-
-  ```
-
-2. Create a Virtual Environment
-
- Before proceeding with the installation, it’s highly recommended to create a virtual environment for Python. This ensures that your package dependencies are isolated from the global environment. The installation might fail if the package is managed externally (e.g., through `apt`). By isolating the environment, you can safely install and manage the required dependencies without interference.
-
-Then you have to activate the virtual environment 
-    ```
-    source envname/bin/activate
-    ```
-
-  To do this:
-
-  To create a virtual environment 
-
-  ```
-    python3 -m venv (your virtual environment name)
-  ```
-
-3. Install dependencies
-
-   ```
-   pip install -r requirements.txt
-   ```
-
-4. Configure environment variables (.env):
+1. ### **Prerequisites**
+   - **NBA API Key:** Get your free API key from [SportsData.io](https://sportsdata.io/)
+   - **AWS Account:** Familiarity with AWS services and Python is a plus!
+   
+2. ### **Clone the Repository**
+```bash
+git clone https://github.com/ifeanyiro9/game-day-notifications.git
+cd game-day-notifications
 ```
-CopyOPENWEATHER_API_KEY=your_api_key
-AWS_BUCKET_NAME=your_bucket_name
-```
+---
+## **Step-by-Step Setup**
 
-4.Configure AWS credentials:
-```
-aws configure
+### **Create an SNS Topic**
+1. Open the AWS Management Console.
+2. Navigate to the SNS service.
+3. Click Create Topic and select Standard as the topic type.
+4. Name the topic (e.g., gd_topic) and note the ARN.
+5. Click Create Topic.
 
-```
-5.Run the Application
-Execute the Python script to fetch and upload weather data:
+### **Add Subscriptions to the SNS Topic**
+1. After creating the topic, click on the topic name from the list.
+2. Navigate to the Subscriptions tab and click Create subscription.
+3. Select a Protocol: For Email:
+  - Choose Email.
+  - Enter a valid email address.
+  - For SMS (phone number):
+  - Choose SMS.
+  - Enter a valid phone number in international format (e.g., +1234567890).
+
+4. Click Create Subscription.
+5. If you added an Email subscription:
+- Check the inbox of the provided email address.
+- Confirm the subscription by clicking the confirmation link in the email.
+6. For SMS, the subscription will be immediately active after creation.
+
+### **Create an SNS Topic Policy**
+1. Open the IAM service in the AWS Management Console.
+2. Navigate to Policies → Create Policy.
+3. Click JSON and paste the JSON policy from gd_sns_policy.json file
+4. Replace REGION and ACCOUNT_ID with your AWS region and account ID.
+5. Click Next: Tags (you can skip adding tags).
+6. Click Next: Review.
+7. Enter a name for the policy (e.g., gd_sns_policy).
+8. Review and click Create Policy.
+
+### **Create an IAM Role for Lambda**
+1. Open the IAM service in the AWS Management Console.
+2. Click Roles → Create Role.
+3. Select AWS Service and choose Lambda.
+4. Attach the following policies:
+- SNS Publish Policy (gd_sns_policy) (created in the previous step).
+- Lambda Basic Execution Role (AWSLambdaBasicExecutionRole) (an AWS managed policy).
+5. Click Next: Tags (you can skip adding tags).
+6. Click Next: Review.
+7. Enter a name for the role (e.g., gd_role).
+8. Review and click Create Role.
+9. Copy and save the ARN of the role for use in the Lambda function.
+
+### **Deploy the Lambda Function**
+1. Open the AWS Management Console and navigate to the Lambda service.
+2. Click Create Function.
+3. Select Author from Scratch.
+4. Enter a function name (e.g., gd_notifications).
+5. Choose Python 3.x as the runtime.
+6. Assign the IAM role created earlier (gd_role) to the function.
+7. Under the Function Code section:
+- Copy the content of the src/gd_notifications.py file from the repository.
+- Paste it into the inline code editor.
+8. Under the Environment Variables section, add the following:
+- NBA_API_KEY: your NBA API key.
+- SNS_TOPIC_ARN: the ARN of the SNS topic created earlier.
+9. Click Create Function.
 
 
-   ``` 
-   python src/weather_dashboard.py
-   ```
+### **Automate with Eventbridge**
+1. Navigate to the Eventbridge service in the AWS Management Console.
+2. Go to Rules → Create Rule.
+3. Select Event Source: Schedule.
+4. Set the cron schedule for when you want updates (e.g., hourly).
+5. Under Targets, select the Lambda function (gd_notifications) and save the rule.
 
 
-## What I Learned
-Working on this project helped me gain hands-on experience with:
+### **Testing the System**
+- Open the Lambda function in the AWS Management Console.
+- Create a test event to simulate execution.
+- Run the function and check CloudWatch Logs for errors.
+- Verify that SMS notifications are sent to the subscribed users.
+---
 
-- AWS S3: Creating and managing buckets.
-- Environment Variable Management: Securing sensitive API keys.
-- Python Best Practices: Writing clean, modular, and reusable code for API integration.
-- Git Workflow: Using version control effectively for project development.
-- Error Handling: Managing failures in distributed systems gracefully.
-- Cloud Resource Management: Leveraging cloud services efficiently.
+### **What I Learned**
+- Setting up a cloud-based notification system with AWS SNS and Lambda.
+- Best practices for securing AWS resources with IAM..
+- Integrating third-party APIs into serverless workflows.
+- Automating tasks with EventBridge and Lambda.
+---
 
-## Future Enhancements
-- Add weather forecasting functionality.
-- Implement data visualization for weather trends.
-- Expand the city tracking feature.
-- Create automated testing for better reliability.
-- Set up a CI/CD pipeline for streamlined deployments.
-
-## Connect and Collaborate
-This project is a part of my **30 Days DevOps Challenge**. Feedback and suggestions are welcome!
-Feel free to fork the repository, submit pull requests, or reach out for collaboration.
+### **Future Enhancements**
+- Add NFL score alerts for extended functionality.
+- Personalize notifications by storing user preferences (e.g., favorite teams) in **DynamoDB**.
+- Build a web-based dashboard for subscription management and live scores.
+---
+### **Contribution**
+Contributions are welcome! Feel free to fork the repo, make your improvements, and create a pull request. Let’s make this project even better!
