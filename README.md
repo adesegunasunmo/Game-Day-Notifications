@@ -53,7 +53,7 @@ game-day-notifications/
    
 2. ### **Clone the Repository**
 ```bash
-git clone https://github.com/ifeanyiro9/game-day-notifications.git
+git clone git@github.com:adesegunasunmo/Game-Day-Notifications.git
 cd game-day-notifications
 ```
 ---
