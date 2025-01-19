@@ -54,7 +54,7 @@ game-day-notifications/
 2. ### **Clone the Repository**
 ```bash
 git clone git@github.com:adesegunasunmo/Game-Day-Notifications.git
-cd game-day-notifications
+cd Game-Day-Notifications
 ```
 ---
 ## **Step-by-Step Setup**
