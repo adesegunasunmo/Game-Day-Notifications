@@ -105,6 +105,9 @@ cd Game-Day-Notifications
 8. Review and click Create Role.
 9. Copy and save the ARN of the role for use in the Lambda function.
 
+  ![image](https://github.com/user-attachments/assets/c31d21a3-285e-4c3f-9f19-f2387e4c153d)
+
+
 ### **Deploy the Lambda Function**
 1. Open the AWS Management Console and navigate to the Lambda service.
 2. Click Create Function.
@@ -128,13 +131,21 @@ cd Game-Day-Notifications
 4. Set the cron schedule for when you want updates (e.g., hourly).
 5. Under Targets, select the Lambda function (gd_notifications) and save the rule.
 
+![image](https://github.com/user-attachments/assets/3d28aca6-ea9c-4e2d-858b-a42d991262a3)
+
+![image](https://github.com/user-attachments/assets/8953d740-e83b-4818-ae08-d746fbc8a3be)
+
+
 
 ### **Testing the System**
 - Open the Lambda function in the AWS Management Console.
 - Create a test event to simulate execution.
 - Run the function and check CloudWatch Logs for errors.
 - Verify that SMS notifications are sent to the subscribed users.
----
+
+![image](https://github.com/user-attachments/assets/a8e8e105-89f7-43fe-b358-70958a6d2636)
+
+
 
 ### **What I Learned**
 - Setting up a cloud-based notification system with AWS SNS and Lambda.
